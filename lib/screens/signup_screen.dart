@@ -1,5 +1,7 @@
 import 'package:eco_circuit/screens/login_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -14,12 +16,48 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _nameController.dispose();
     _phoneController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+  }
+
+  Future<void> signUpUser() async {
+    try {
+      if (_nameController.text.isNotEmpty &&
+          _phoneController.text.isNotEmpty &&
+          _emailController.text.isNotEmpty &&
+          _passwordController.text.isNotEmpty) {
+        // Create user in Firebase Authentication
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim(),
+            );
+
+        String uid = userCredential.user!.uid; // Get unique user ID
+
+        // Store user details in Firestore
+        await FirebaseFirestore.instance.collection('users').doc(uid).set({
+          'uid': uid,
+          'full_name': _nameController.text.trim(),
+          'phone': _phoneController.text.trim(),
+          'email': _emailController.text.trim(),
+          'created_at': Timestamp.now(), // Store timestamp
+        });
+
+        print("User registered & data stored in Firestore");
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => LoginScreen()),
+        );
+      } else {
+        print("Please fill all fields");
+      }
+    } on FirebaseAuthException catch (e) {
+      print("Error: ${e.message}");
+    }
   }
 
   void navigateToLogin() {
@@ -44,8 +82,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-                  Image.asset('assets/logo_without_bg.png', height: 300),
+                  Image.asset('assets/EcoCircuit-removebg.png', height: 300),
                   const Text(
                     "Create Account",
                     style: TextStyle(
@@ -124,7 +161,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      await signUpUser();
+                    },
                     child: const Text(
                       "Sign Up",
                       style: TextStyle(
@@ -152,7 +191,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       const Text("Already have an account ? "),
                       InkWell(
                         borderRadius: BorderRadius.circular(20),
-
                         onTap: navigateToLogin,
                         child: const Padding(
                           padding: EdgeInsets.symmetric(

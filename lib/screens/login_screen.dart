@@ -1,5 +1,6 @@
 import 'package:eco_circuit/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -9,12 +10,49 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool _isLoading = false;
+  String? _errorMessage;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> loginUser() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      if (_emailController.text.isNotEmpty &&
+          _passwordController.text.isNotEmpty) {
+        await _auth.signInWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+
+        // Navigate to Home Screen after login (Replace with your actual home screen)
+        // Navigator.of(context).pushReplacement(
+        //   MaterialPageRoute(builder: (context) => HomeScreen()),
+        // );
+      } else {
+        setState(() {
+          _errorMessage = "Please fill in all fields";
+        });
+      }
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _errorMessage = e.message;
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   void navigateToSignUp() {
@@ -36,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-                  Image.asset('assets/logo_without_bg.png', height: 300),
+                  Image.asset('assets/EcoCircuit-removebg.png', height: 250),
                   const SizedBox(height: 10),
                   const Text(
                     "Login to continue",
@@ -53,55 +91,66 @@ class _LoginScreenState extends State<LoginScreen> {
                       filled: true,
                       fillColor: Colors.white,
                       labelText: "Email",
-                      labelStyle: TextStyle(color: Colors.black),
+                      labelStyle: const TextStyle(color: Colors.black),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: const BorderSide(color: Colors.black),
                       ),
-                      prefixIcon: Icon(Icons.email, color: Colors.black),
+                      prefixIcon: const Icon(Icons.email, color: Colors.black),
                     ),
                     keyboardType: TextInputType.emailAddress,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextField(
                     controller: _passwordController,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
                       labelText: "Password",
-                      labelStyle: TextStyle(color: Colors.black),
+                      labelStyle: const TextStyle(color: Colors.black),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: const BorderSide(color: Colors.black),
                       ),
-                      prefixIcon: Icon(Icons.lock, color: Colors.black),
+                      prefixIcon: const Icon(Icons.lock, color: Colors.black),
                     ),
                     obscureText: true,
                   ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: Text(
-                      "Login",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+                  const SizedBox(height: 10),
+                  if (_errorMessage != null)
+                    Text(
+                      _errorMessage!,
+                      style: const TextStyle(color: Colors.red, fontSize: 14),
                     ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: _isLoading ? null : loginUser,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 80,
                         vertical: 15,
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
-                        side: BorderSide(color: Colors.black),
+                        side: const BorderSide(color: Colors.black),
                       ),
                     ),
+                    child:
+                        _isLoading
+                            ? const CircularProgressIndicator(
+                              color: Colors.black,
+                            )
+                            : const Text(
+                              "Login",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -109,12 +158,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       InkWell(
                         borderRadius: BorderRadius.circular(20),
                         onTap: navigateToSignUp,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 5,
                             vertical: 2,
                           ),
-                          child: const Text(
+                          child: Text(
                             "Sign Up",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
@@ -122,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
