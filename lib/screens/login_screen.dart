@@ -1,8 +1,11 @@
+import 'package:eco_circuit/screens/home_screen.dart';
 import 'package:eco_circuit/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -35,10 +38,9 @@ class _LoginScreenState extends State<LoginScreen> {
           password: _passwordController.text.trim(),
         );
 
-        // Navigate to Home Screen after login (Replace with your actual home screen)
-        // Navigator.of(context).pushReplacement(
-        //   MaterialPageRoute(builder: (context) => HomeScreen()),
-        // );
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
       } else {
         setState(() {
           _errorMessage = "Please fill in all fields";

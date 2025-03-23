@@ -1,3 +1,4 @@
+import 'package:eco_circuit/screens/home_screen.dart';
 import 'package:eco_circuit/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -50,7 +51,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         print("User registered & data stored in Firestore");
 
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => LoginScreen()),
+          MaterialPageRoute(builder: (context) => HomeScreen()),
         );
       } else {
         print("Please fill all fields");
