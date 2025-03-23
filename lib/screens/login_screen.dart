@@ -1,3 +1,4 @@
+import 'package:eco_circuit/responsive/mobilescreen_layout.dart';
 import 'package:eco_circuit/screens/home_screen.dart';
 import 'package:eco_circuit/screens/signup_screen.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
         );
 
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          MaterialPageRoute(builder: (context) => MobileScreenLayout()),
         );
       } else {
         setState(() {
