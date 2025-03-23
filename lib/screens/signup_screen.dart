@@ -44,9 +44,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(Icons.person_outline, size: 100, color: Colors.black),
-                  SizedBox(height: 20),
-                  Text(
+                  // SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                  Image.asset('assets/logo_without_bg.png', height: 300),
+                  const Text(
                     "Create Account",
                     style: TextStyle(
                       fontSize: 28,
@@ -54,78 +54,78 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(height: 10),
-                  Text(
+                  const SizedBox(height: 10),
+                  const Text(
                     "Sign up to get started",
                     style: TextStyle(fontSize: 16, color: Colors.black),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   TextField(
                     controller: _nameController,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
                       labelText: "Full Name",
-                      labelStyle: TextStyle(color: Colors.black),
+                      labelStyle: const TextStyle(color: Colors.black),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: const BorderSide(color: Colors.black),
                       ),
-                      prefixIcon: Icon(Icons.person, color: Colors.black),
+                      prefixIcon: const Icon(Icons.person, color: Colors.black),
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextField(
                     controller: _phoneController,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
                       labelText: "Phone Number",
-                      labelStyle: TextStyle(color: Colors.black),
+                      labelStyle: const TextStyle(color: Colors.black),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: const BorderSide(color: Colors.black),
                       ),
-                      prefixIcon: Icon(Icons.phone, color: Colors.black),
+                      prefixIcon: const Icon(Icons.phone, color: Colors.black),
                     ),
                     keyboardType: TextInputType.phone,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextField(
                     controller: _emailController,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
                       labelText: "Email",
-                      labelStyle: TextStyle(color: Colors.black),
+                      labelStyle: const TextStyle(color: Colors.black),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: const BorderSide(color: Colors.black),
                       ),
-                      prefixIcon: Icon(Icons.email, color: Colors.black),
+                      prefixIcon: const Icon(Icons.email, color: Colors.black),
                     ),
                     keyboardType: TextInputType.emailAddress,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextField(
                     controller: _passwordController,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
                       labelText: "Password",
-                      labelStyle: TextStyle(color: Colors.black),
+                      labelStyle: const TextStyle(color: Colors.black),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: Colors.black),
+                        borderSide: const BorderSide(color: Colors.black),
                       ),
-                      prefixIcon: Icon(Icons.lock, color: Colors.black),
+                      prefixIcon: const Icon(Icons.lock, color: Colors.black),
                     ),
                     obscureText: true,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {},
-                    child: Text(
+                    child: const Text(
                       "Sign Up",
                       style: TextStyle(
                         fontSize: 18,
@@ -141,11 +141,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
-                        side: BorderSide(color: Colors.black),
+                        side: const BorderSide(color: Colors.black),
                       ),
                     ),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -154,12 +154,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         borderRadius: BorderRadius.circular(20),
 
                         onTap: navigateToLogin,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
                             horizontal: 5,
                             vertical: 2,
                           ),
-                          child: const Text(
+                          child: Text(
                             "Login",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           ),
