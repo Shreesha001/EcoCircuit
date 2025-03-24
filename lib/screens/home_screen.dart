@@ -1,7 +1,10 @@
+import 'dart:io';
+import 'package:eco_circuit/screens/scan/question_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:eco_circuit/theme/pallete.dart';
 import 'package:eco_circuit/widgets/home_screen_widgets/blog/add_blog_screen.dart';
 import 'package:eco_circuit/widgets/home_screen_widgets/blog/blog_list_widget.dart';
-import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,17 +14,74 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  File? _selectedImage;
+
+  /// Function to Pick Image from Camera or Gallery
+  Future<void> _pickImage(ImageSource source) async {
+    final XFile? image = await ImagePicker().pickImage(source: source);
+    if (image != null) {
+      setState(() {
+        _selectedImage = File(image.path);
+      });
+
+      // Navigate to QuestionScreen with the selected image
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => QuestionScreen(image: _selectedImage!),
+        ),
+      );
+    }
+  }
+
+  /// Show Image Picker Dialog
+  void _showImagePickerDialog() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return Wrap(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt, color: Colors.green),
+              title: const Text("Take a Photo"),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library, color: Colors.blue),
+              title: const Text("Choose from Gallery"),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(ImageSource.gallery);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.cancel, color: Colors.red),
+              title: const Text("Cancel"),
+              onTap: () => Navigator.pop(context),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100], // Light background for contrast
+      backgroundColor: Colors.grey[100],
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // **Top Banner Section**
             Stack(
               children: [
-                // Background Image with Overlay
                 ClipRRect(
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(30),
@@ -31,10 +91,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: MediaQuery.of(context).size.height * 0.26,
                     width: double.infinity,
                     decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(30),
-                        bottomRight: Radius.circular(30),
-                      ),
                       image: DecorationImage(
                         image: NetworkImage(
                           "https://t3.ftcdn.net/jpg/08/65/84/34/360_F_865843456_1A0tIy44qd81nL2hVCoIa9OdM3Xcr6o0.jpg",
@@ -101,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 20),
 
-            // Enhanced Scan Device Section
+            // **Scan Device Section**
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Container(
@@ -137,18 +193,28 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton.icon(
-                      onPressed: () {
-                        // Implement scan/upload logic here
-                      },
-                      icon: const Icon(Icons.camera_alt, size: 28),
+                      onPressed: _showImagePickerDialog, // Open Image Picker
+                      icon: const Icon(
+                        Icons.camera_alt,
+                        size: 28,
+                        color: Colors.white,
+                      ),
                       label: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                        child: Text("Scan / Upload Image", style: TextStyle(fontSize: 18)),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 15,
+                          vertical: 10,
+                        ),
+                        child: Text(
+                          "Scan / Upload Image",
+                          style: TextStyle(fontSize: 18),
+                        ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Pallete.forestGreen,
+                        backgroundColor: const Color.fromARGB(255, 84, 161, 51),
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         elevation: 3,
                         padding: EdgeInsets.zero,
                       ),
@@ -159,6 +225,8 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             const SizedBox(height: 20),
+
+            // **E-Waste Blog Title**
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Text(
@@ -172,13 +240,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 10),
 
-            /// Blog List
+            // **Blog List**
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: BlogListWidget(),
             ),
 
-            /// Button Below Blog List (Aligned to Right)
+            // **Write Blog Button**
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Align(
