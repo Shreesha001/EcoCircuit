@@ -1,4 +1,5 @@
 import 'package:eco_circuit/firebase_options.dart';
+import 'package:eco_circuit/screens/home_screen.dart';
 import 'package:eco_circuit/screens/login_screen.dart';
 import 'package:eco_circuit/screens/signup_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
           seedColor: const Color.fromRGBO(56, 118, 29, 255),
         ),
       ),
-      home: SignUpScreen(),
+      home: HomeScreen(),
     );
   }
 }
