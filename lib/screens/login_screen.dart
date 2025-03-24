@@ -38,6 +38,14 @@ class _LoginScreenState extends State<LoginScreen> {
           password: _passwordController.text.trim(),
         );
 
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Successfully logged in!"),
+            backgroundColor: Colors.green,
+          ),
+        );
+
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => HomeScreen()),
         );
@@ -45,11 +53,26 @@ class _LoginScreenState extends State<LoginScreen> {
         setState(() {
           _errorMessage = "Please fill in all fields";
         });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text("Please fill in all fields"),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     } on FirebaseAuthException catch (e) {
       setState(() {
         _errorMessage = e.message;
       });
+
+      String errorMsg = "Invalid email or password";
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMsg),
+          backgroundColor: Colors.red,
+        ),
+      );
     } finally {
       setState(() {
         _isLoading = false;
@@ -58,9 +81,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void navigateToSignUp() {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute(builder: (context) => SignUpScreen()));
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => SignUpScreen()),
+    );
   }
 
   @override
@@ -118,12 +141,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     obscureText: true,
                   ),
-                  const SizedBox(height: 10),
-                  if (_errorMessage != null)
-                    Text(
-                      _errorMessage!,
-                      style: const TextStyle(color: Colors.red, fontSize: 14),
-                    ),
+                  // const SizedBox(height: 10),
+                  // if (_errorMessage != null)
+                  //   Text(
+                  //     _errorMessage!,
+                  //     style: const TextStyle(color: Colors.red, fontSize: 14),
+                  //   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _isLoading ? null : loginUser,
@@ -138,19 +161,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         side: const BorderSide(color: Colors.black),
                       ),
                     ),
-                    child:
-                        _isLoading
-                            ? const CircularProgressIndicator(
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: Colors.black)
+                        : const Text(
+                            "Login",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
                               color: Colors.black,
-                            )
-                            : const Text(
-                              "Login",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
                             ),
+                          ),
                   ),
                   const SizedBox(height: 15),
                   Row(
