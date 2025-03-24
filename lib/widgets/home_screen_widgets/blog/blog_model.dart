@@ -22,7 +22,7 @@ class Blog {
     if (data['timestamp'] != null) {
       Timestamp timestamp = data['timestamp'] as Timestamp;
       formattedTimestamp = DateFormat(
-        'yyyy-MM-dd HH:mm',
+        'dd MMMM yyyy',
       ).format(timestamp.toDate());
     }
 

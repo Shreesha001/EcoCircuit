@@ -127,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       MaterialPageRoute(builder: (context) => AddBlogScreen()),
                     );
                   },
-                  backgroundColor: Color.fromARGB(255, 71, 139, 74),
+                  backgroundColor: Color.fromARGB(255, 94, 161, 96),
                   icon: const Icon(Icons.edit, color: Colors.white),
                   label: const Text(
                     "Write a Blog",
