@@ -63,6 +63,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
     });
   }
 
+  void _showSnackbar(String message, {bool isError = false}) {
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(color: isError ? Colors.white : Colors.black),
+      ),
+      backgroundColor: isError ? Colors.red : Colors.green,
+      duration: const Duration(seconds: 2),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   Future<void> signUpUser() async {
     if (_emailError == null && _phoneError == null && _passwordError == null) {
       try {
@@ -86,16 +98,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
             'created_at': Timestamp.now(),
           });
 
-          print("User registered & data stored in Firestore");
+          _showSnackbar("Account created successfully");
 
           Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => LoginScreen()),
           );
         } else {
-          print("Please fill all fields");
+          _showSnackbar("Please fill in all fields", isError: true);
         }
       } on FirebaseAuthException catch (e) {
-        print("Error: ${e.message}");
+        if (e.code == 'email-already-in-use') {
+          _showSnackbar("Account already exists", isError: true);
+        } else {
+          _showSnackbar("Error: ${e.message}", isError: true);
+        }
       }
     }
   }

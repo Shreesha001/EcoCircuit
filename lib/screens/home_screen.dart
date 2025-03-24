@@ -14,17 +14,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100], // Light background for contrast
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Stack(
               children: [
-                // Background Image
+                // Background Image with Overlay
                 ClipRRect(
                   borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(25),
-                    bottomRight: Radius.circular(25),
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
                   ),
                   child: Container(
                     height: MediaQuery.of(context).size.height * 0.26,
@@ -47,12 +48,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
                           colors: [
-                            Colors.black.withOpacity(0.7),
-                            Colors.black.withOpacity(0.1),
+                            Colors.black.withOpacity(0.8),
+                            Colors.black.withOpacity(0.2),
                           ],
                         ),
                       ),
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(20),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,8 +62,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             "Reduce E-Waste Impact",
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 20,
+                              fontSize: 22,
                               fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5,
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -71,6 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: TextStyle(
                               color: Colors.white.withOpacity(0.9),
                               fontSize: 14,
+                              fontStyle: FontStyle.italic,
                             ),
                           ),
                         ],
@@ -85,9 +88,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Text(
                         'EcoCircuit',
                         style: TextStyle(
-                          fontSize: 32,
+                          fontSize: 34,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
+                          letterSpacing: 1.2,
                         ),
                       ),
                     ),
@@ -95,6 +99,65 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
+            const SizedBox(height: 20),
+
+            // Enhanced Scan Device Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      spreadRadius: 2,
+                      blurRadius: 6,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Scan Your Device",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Pallete.forestGreen,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    const Text(
+                      "Take a photo or upload an image to get instant diagnostics.",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 16, color: Colors.black54),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        // Implement scan/upload logic here
+                      },
+                      icon: const Icon(Icons.camera_alt, size: 28),
+                      label: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                        child: Text("Scan / Upload Image", style: TextStyle(fontSize: 18)),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Pallete.forestGreen,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        elevation: 3,
+                        padding: EdgeInsets.zero,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
             const SizedBox(height: 20),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
@@ -119,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Align(
-                alignment: Alignment.centerRight, // Align button to right
+                alignment: Alignment.centerRight,
                 child: FloatingActionButton.extended(
                   onPressed: () {
                     Navigator.push(
@@ -127,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       MaterialPageRoute(builder: (context) => AddBlogScreen()),
                     );
                   },
-                  backgroundColor: Color.fromARGB(255, 94, 161, 96),
+                  backgroundColor: const Color(0xFF5EA160),
                   icon: const Icon(Icons.edit, color: Colors.white),
                   label: const Text(
                     "Write a Blog",
@@ -139,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 20), // Extra space at bottom
+            const SizedBox(height: 20),
           ],
         ),
       ),
