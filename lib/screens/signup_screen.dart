@@ -96,6 +96,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             'phone': _phoneController.text.trim(),
             'email': _emailController.text.trim(),
             'created_at': Timestamp.now(),
+            "devices_scanned": 0,
+            "carbon_saved": 0,
+            "badges_earned": 0
           });
 
           _showSnackbar("Account created successfully");
