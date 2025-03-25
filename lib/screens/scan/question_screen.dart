@@ -71,6 +71,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
         "timestamp": FieldValue.serverTimestamp(),
         "userId": user.uid,
         "userEmail": user.email,
+        "ai-report": "no report",
       };
 
       // 3. Save to both collections in a batch write
