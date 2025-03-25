@@ -5,6 +5,7 @@ import 'package:eco_circuit/screens/home_screen.dart';
 import 'package:eco_circuit/screens/login_screen.dart';
 import 'package:eco_circuit/screens/signup_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
 
 void main() async {
@@ -12,6 +13,10 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
 }
+
+final model = FirebaseVertexAI.instance.generativeModel(
+  model: 'gemini-2.0-flash',
+);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
