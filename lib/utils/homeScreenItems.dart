@@ -10,5 +10,5 @@ final List<Widget> HomeScreenItems = [
   HomeScreen(),
   ServiceScreen(),
   ActivityScreen(),
-  AccountScreen(),
+  ProfileScreen(),
 ];
