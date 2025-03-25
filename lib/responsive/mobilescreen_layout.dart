@@ -43,10 +43,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(icon: Icon(Icons.build), label: "Services"),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.directions_run),
-            label: "Activity",
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: "History"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Account"),
         ],
       ),

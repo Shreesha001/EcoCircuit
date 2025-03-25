@@ -1,4 +1,5 @@
 import 'package:eco_circuit/firebase_options.dart';
+import 'package:eco_circuit/screens/account_screen.dart';
 import 'package:eco_circuit/screens/home_screen.dart';
 import 'package:eco_circuit/screens/login_screen.dart';
 import 'package:eco_circuit/screens/signup_screen.dart';

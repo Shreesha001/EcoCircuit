@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eco_circuit/responsive/mobilescreen_layout.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:eco_circuit/screens/home_screen.dart'; // Import your home screen
+import 'package:eco_circuit/screens/home_screen.dart';
 
 class QuestionScreen extends StatefulWidget {
   final File image;
@@ -96,7 +97,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
       if (!mounted) return;
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(builder: (context) => MobileScreenLayout()),
         (route) => false,
       );
     } catch (e) {
