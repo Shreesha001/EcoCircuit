@@ -24,11 +24,6 @@ class _QuestionScreenState extends State<QuestionScreen> {
   final TextEditingController deviceAgeController = TextEditingController();
   final TextEditingController problemController = TextEditingController();
   final TextEditingController visualDamageController = TextEditingController();
-  final TextEditingController deviceTypeController = TextEditingController();
-  final TextEditingController workingConditionController =
-      TextEditingController();
-  final TextEditingController previousRepairsController =
-      TextEditingController();
 
   /// Shows a snackbar
   void _showCustomSnackBar(String message, {bool isError = false}) {
@@ -162,50 +157,35 @@ class _QuestionScreenState extends State<QuestionScreen> {
 
                       // Form fields
                       _buildTextField(
-                        controller: deviceTypeController,
-                        label: "Device Type*",
-                        hint: "e.g., Phone, Laptop, TV, Washing Machine",
-                        icon: Icons.devices_other,
+                        controller: deviceCompanyController,
+                        label: "Device Company*",
+                        hint: "e.g., Samsung, Apple",
+                        icon: Icons.business,
                       ),
                       _buildTextField(
                         controller: deviceModelController,
-                        label: "Brand & Model*",
-                        hint:
-                            "e.g., Samsung Galaxy S22, LG 55-inch TV, Dell XPS 15",
-                        icon: Icons.label,
+                        label: "Device Model*",
+                        hint: "e.g., iPhone 13, Galaxy S21",
+                        icon: Icons.phone_android,
                       ),
                       _buildTextField(
                         controller: deviceAgeController,
                         label: "Device Age*",
-                        hint: "e.g., 3 years, 6 months",
-                        keyboardType: TextInputType.text,
+                        hint: "e.g., 2 years",
+                        keyboardType: TextInputType.number,
                         icon: Icons.calendar_today,
                       ),
                       _buildTextField(
-                        controller: workingConditionController,
-                        label: "Working Condition*",
-                        hint:
-                            "e.g., Working, Partially Working, Not Powering On",
-                        icon: Icons.power_settings_new,
-                      ),
-                      _buildTextField(
                         controller: problemController,
-                        label: "Main Issue/Problem*",
-                        hint:
-                            "e.g., Screen cracked, Heating issue, Motor not running",
+                        label: "Problem You Are Facing*",
+                        hint: "Describe the issue",
                         maxLines: 3,
                         icon: Icons.warning,
                       ),
                       _buildTextField(
-                        controller: previousRepairsController,
-                        label: "Previous Repairs*",
-                        hint: "Has this been repaired before? Yes/No",
-                        icon: Icons.build,
-                      ),
-                      _buildTextField(
                         controller: visualDamageController,
-                        label: "Visual or Physical Damage*",
-                        hint: "e.g., Scratches, Broken Parts, Water Damage",
+                        label: "Any Visual Damage?*",
+                        hint: "Describe any physical damage",
                         maxLines: 2,
                         icon: Icons.visibility,
                       ),
