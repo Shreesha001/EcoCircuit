@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eco_circuit/responsive/mobilescreen_layout.dart';
+import 'package:eco_circuit/screens/scan/ai_diagnosis_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -74,32 +75,31 @@ class _QuestionScreenState extends State<QuestionScreen> {
         "ai-report": "no report",
       };
 
-      // 3. Save to both collections in a batch write
-      final batch = FirebaseFirestore.instance.batch();
-
-      // Main collection
+      // 3. Save to Firestore & Get Document ID
       final mainDocRef =
           FirebaseFirestore.instance.collection("deviceScans").doc();
-      batch.set(mainDocRef, formData);
+      await mainDocRef.set(formData);
 
-      // User's personal scan history
       final userDocRef = FirebaseFirestore.instance
           .collection("users")
           .doc(user.uid)
           .collection("scans")
           .doc(mainDocRef.id);
-      batch.set(userDocRef, formData);
+      await userDocRef.set(formData);
 
-      await batch.commit();
-
-      // 4. Show Success Message & Navigate to Home
+      // 4. Show Success Message
       _showCustomSnackBar("Device scan submitted successfully!");
 
       if (!mounted) return;
-      Navigator.pushAndRemoveUntil(
+
+      // 5. Navigate to Diagnosis Screen
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => MobileScreenLayout()),
-        (route) => false,
+        MaterialPageRoute(
+          builder:
+              (context) =>
+                  DiagnosisScreen(scanId: mainDocRef.id, deviceData: formData),
+        ),
       );
     } catch (e) {
       if (!mounted) return;
