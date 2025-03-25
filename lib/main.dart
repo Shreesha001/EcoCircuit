@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
           seedColor: const Color.fromRGBO(56, 118, 29, 255),
         ),
       ),
-      home: LoginScreen(),
+      home: HomeScreen(),
     );
   }
 }
