@@ -3,6 +3,7 @@ import 'package:eco_circuit/screens/account_screen.dart';
 import 'package:eco_circuit/screens/history/history_screen.dart';
 import 'package:eco_circuit/screens/home_screen.dart';
 import 'package:eco_circuit/screens/login_screen.dart';
+import 'package:eco_circuit/screens/services/recycle_screen.dart';
 import 'package:eco_circuit/screens/signup_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';

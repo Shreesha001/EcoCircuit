@@ -1,4 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eco_circuit/screens/services/recycle_screen.dart';
+import 'package:eco_circuit/screens/services/repair_screen.dart';
+import 'package:eco_circuit/screens/services/resell_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +52,6 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
       final response = await model.generateContent([Content.text(prompt)]);
       String result = response.text ?? "Unable to generate diagnosis.";
 
-      // Check if the response contains repair steps
       if (result.toLowerCase().contains("step 1") ||
           result.toLowerCase().contains("fix")) {
         isRepairable = true;
@@ -83,7 +85,9 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
   void _handleUserResponse(bool issueResolved) {
     if (issueResolved) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Great! Your device issue is resolved! 🎉")),
+        const SnackBar(
+          content: Text("Great! Your device issue is resolved! 🎉"),
+        ),
       );
       Navigator.pop(context);
     } else {
@@ -95,9 +99,28 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
 
   /// **Navigate to Resell / Repair / Recycle**
   void _navigateToOption(String option) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text("Navigating to $option...")));
+    Widget screen;
+    switch (option) {
+      case "Recycle":
+        screen = RecycleScreen(
+          scanId: widget.scanId,
+          deviceData: widget.deviceData,
+        );
+        break;
+      case "Repair":
+        screen = RepairScreen(scanId: widget.scanId);
+        break;
+      case "Resell":
+        screen = ResellScreen(
+          // scanId: widget.scanId,
+          // deviceData: widget.deviceData,
+        );
+        break;
+      default:
+        return;
+    }
+
+    Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
 
   @override
@@ -200,9 +223,9 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          _buildOptionButton("♻️ Recycle", Colors.blue),
-                          _buildOptionButton("🔧 Repair", Colors.orange),
-                          _buildOptionButton("💰 Resell", Colors.purple),
+                          _buildOptionButton("Recycle", Colors.blue),
+                          _buildOptionButton("Repair", Colors.orange),
+                          _buildOptionButton("Resell", Colors.purple),
                         ],
                       ),
                     ],
