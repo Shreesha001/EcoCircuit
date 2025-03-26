@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:eco_circuit/firebase_options.dart';
 import 'package:eco_circuit/screens/account_screen.dart';
 import 'package:eco_circuit/screens/history/history_screen.dart';
