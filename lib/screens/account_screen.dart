@@ -1,7 +1,10 @@
+import 'package:eco_circuit/screens/login_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'settings_screen.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -9,94 +12,152 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final _auth = FirebaseAuth.instance;
-  final _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final ImagePicker _picker = ImagePicker();
 
-  User? _user;
-  String _fullName = "Loading...";
-  String _email = "Loading...";
-  String _phone = "Loading...";
-  String _createdAt = "Loading...";
-  int _devicesScanned = 0;
-  double _carbonFootprintSaved = 0.0;
-  int _badgesEarned = 0;
-
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
+  User? user;
+  Map<String, dynamic>? userData;
+  Map<String, dynamic>? scanStats;
   bool _isEditing = false;
+  bool _isLoading = true;
+
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _phoneController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _getUserData();
+    _loadUserData();
   }
 
-  Future<void> _getUserData() async {
-  _user = _auth.currentUser;
-  if (_user != null) {
-    try {
-      DocumentSnapshot userDoc = 
-          await _firestore.collection('users').doc(_user!.uid).get();
+  Future<void> _logout() async {
+    bool confirmSignOut =
+        await showDialog(
+          context: context,
+          builder:
+              (context) => AlertDialog(
+                title: Text("Sign Out"),
+                content: Text("Are you sure you want to sign out?"),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: Text("Cancel"),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: Text(
+                      "Sign Out",
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ],
+              ),
+        ) ??
+        false;
 
-      if (userDoc.exists && userDoc.data() != null) {
-        Map<String, dynamic>? data = userDoc.data() as Map<String, dynamic>?;
+    if (confirmSignOut) {
+      try {
+        await FirebaseAuth.instance.signOut();
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => LoginScreen()),
+        ); // Adjust the route as needed
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error signing out: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
 
+  Future<void> _loadUserData() async {
+    user = _auth.currentUser;
+    if (user != null) {
+      // Load user profile data
+      var userDoc = await _firestore.collection('users').doc(user!.uid).get();
+      if (userDoc.exists) {
         setState(() {
-          _fullName = data?['full_name'] ?? "No Name";
-          _email = data?['email'] ?? _user!.email ?? "No Email";
-          _phone = data?['phone'] ?? "Not Available";
-          _createdAt = (data?['created_at'] != null)
-              ? data!['created_at'].toDate().toString().substring(0, 10)
-              : "Unknown";
-          _devicesScanned = data?['devices_scanned'] ?? 0;
-          _carbonFootprintSaved = data?['carbon_saved'] ?? 0.0;
-          _badgesEarned = data?['badges'] ?? 0;
-
-          _nameController.text = _fullName;
-          _phoneController.text = _phone;
-        });
-      } else {
-        setState(() {
-          _fullName = "No Name";
-          _email = _user!.email ?? "No Email";
-          _phone = "Not Available";
-          _createdAt = "Unknown";
-          _devicesScanned = 0;
-          _carbonFootprintSaved = 0.0;
-          _badgesEarned = 0;
+          userData = userDoc.data() as Map<String, dynamic>;
+          _nameController.text = userData?['name'] ?? '';
+          _phoneController.text = userData?['phone'] ?? '';
         });
       }
-    } catch (e) {
-      print("Error fetching user data: $e");
+
+      // Load scan statistics
+      var scans =
+          await _firestore
+              .collection('users')
+              .doc(user!.uid)
+              .collection('scans')
+              .get();
       setState(() {
-        _fullName = "Error Loading";
-        _email = "Error Loading";
-        _phone = "Error Loading";
-        _createdAt = "Error";
-        _devicesScanned = 0;
-        _carbonFootprintSaved = 0.0;
-        _badgesEarned = 0;
+        scanStats = {
+          'totalScans': scans.docs.length,
+          'badges': scans.docs.length ~/ 5, // 1 badge per 5 scans
+        };
+        _isLoading = false;
       });
     }
   }
-}
 
+  Future<void> _updateProfile() async {
+    if (user == null) return;
 
-  Future<void> _updateUserData() async {
-    if (_user != null) {
-      await _firestore.collection('users').doc(_user!.uid).update({
-        'full_name': _nameController.text.trim(),
+    try {
+      await _firestore.collection('users').doc(user!.uid).update({
+        'name': _nameController.text.trim(),
         'phone': _phoneController.text.trim(),
       });
 
       setState(() {
-        _fullName = _nameController.text.trim();
-        _phone = _phoneController.text.trim();
         _isEditing = false;
       });
-
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Profile updated successfully!"))
+        SnackBar(
+          content: Text('Profile updated successfully!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      await _loadUserData();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error updating profile: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> _uploadProfileImage() async {
+    try {
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image == null || user == null) return;
+
+      // Upload to Firebase Storage
+      final ref = FirebaseStorage.instance.ref().child(
+        'profile_images/${user!.uid}.jpg',
+      );
+      await ref.putFile(File(image.path));
+      final url = await ref.getDownloadURL();
+
+      // Update Firestore
+      await _firestore.collection('users').doc(user!.uid).update({
+        'profileImage': url,
+      });
+
+      setState(() {
+        userData?['profileImage'] = url;
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error uploading image: $e'),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }
@@ -104,166 +165,275 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, 
       appBar: AppBar(
-        title: Text("Profile", style: TextStyle(color: Colors.black)),
-        centerTitle: true,
-        backgroundColor: Colors.green[100], // Light Green AppBar
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.settings, color: Color(0xFF228B22)), // Olive Green Settings Icon
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SettingsScreen()),
-              );
-            },
-          )
-        ],
+        title: Text('My Profile'),
+        backgroundColor: Colors.teal[700],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-
-            // Profile Picture
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: NetworkImage(
-                "https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg",
-              ),
-            ),
-
-            const SizedBox(height: 10),
-
-            // Name & Edit Button
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  _fullName,
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
-                ),
-                IconButton(
-                  icon: Icon(Icons.edit, color: Color(0xFF228B22)), // Olive Green Edit Icon
-                  onPressed: () {
-                    setState(() {
-                      _isEditing = true;
-                    });
-                  },
-                )
-              ],
-            ),
-
-            Text(
-              _email,
-              style: TextStyle(color: Colors.grey[700]),
-            ),
-
-            const SizedBox(height: 30),
-
-            // Editable Fields
-            _isEditing ? _buildEditableFields() : _buildProfileDetails(),
-
-            const SizedBox(height: 30),
-
-            // Save Button
-            _isEditing
-                ? ElevatedButton(
-                    onPressed: _updateUserData,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF228B22), // Olive Green Button
-                      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 12),
+      body:
+          _isLoading
+              ? Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    // Profile Picture Section
+                    Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        CircleAvatar(
+                          radius: 60,
+                          backgroundColor: Colors.grey[300],
+                          backgroundImage:
+                              userData?['profileImage'] != null
+                                  ? NetworkImage(userData!['profileImage'])
+                                  : null,
+                          child:
+                              userData?['profileImage'] == null
+                                  ? Icon(
+                                    Icons.person,
+                                    size: 60,
+                                    color: Colors.grey[600],
+                                  )
+                                  : null,
+                        ),
+                        Container(
+                          width: 36,
+                          height: 36,
+                          decoration: BoxDecoration(
+                            color: Colors.teal[700],
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 6,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: IconButton(
+                            iconSize: 20,
+                            icon: Icon(Icons.camera_alt, color: Colors.white),
+                            onPressed: _uploadProfileImage,
+                          ),
+                        ),
+                      ],
                     ),
-                    child: Text("Save", style: TextStyle(fontSize: 18, color: Colors.white)),
-                  )
-                : SizedBox.shrink(),
+                    SizedBox(height: 20),
 
-            const SizedBox(height: 30),
+                    // User Info Section
+                    Card(
+                      child: Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Column(
+                          children: [
+                            ListTile(
+                              leading: Icon(
+                                Icons.person,
+                                color: Colors.teal[700],
+                              ),
+                              title:
+                                  _isEditing
+                                      ? TextField(
+                                        controller: _nameController,
+                                        decoration: InputDecoration(
+                                          labelText: 'Full Name',
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                      : Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              userData?['name'] ??
+                                                  'No name provided',
+                                              style: TextStyle(fontSize: 18),
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: Icon(Icons.edit, size: 20),
+                                            onPressed: () {
+                                              setState(() {
+                                                _isEditing = true;
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                            ),
+                            Divider(),
+                            ListTile(
+                              leading: Icon(
+                                Icons.email,
+                                color: Colors.teal[700],
+                              ),
+                              title: Text(user?.email ?? 'No email'),
+                            ),
+                            Divider(),
+                            ListTile(
+                              leading: Icon(
+                                Icons.phone,
+                                color: Colors.teal[700],
+                              ),
+                              title:
+                                  _isEditing
+                                      ? TextField(
+                                        controller: _phoneController,
+                                        decoration: InputDecoration(
+                                          labelText: 'Phone Number',
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              10,
+                                            ),
+                                          ),
+                                        ),
+                                        keyboardType: TextInputType.phone,
+                                      )
+                                      : Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              userData?['phone'] ??
+                                                  'No phone number',
+                                              style: TextStyle(fontSize: 18),
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: Icon(Icons.edit, size: 20),
+                                            onPressed: () {
+                                              setState(() {
+                                                _isEditing = true;
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
 
-            // Badges Earned & Carbon Footprint Saved
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _buildStatCard("Badges Earned", _badgesEarned.toString()),
-                  _buildStatCard("Carbon Saved", "${_carbonFootprintSaved.toStringAsFixed(2)} kg"),
-                ],
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          _buildStatCard(
+                            icon: Icons.devices,
+                            value: scanStats?['totalScans']?.toString() ?? '0',
+                            label: 'Devices Scanned',
+                            color: Colors.teal[700]!,
+                          ),
+                          _buildStatCard(
+                            icon: Icons.eco,
+                            value: scanStats?['carbonSaved']?.toString() ?? '0',
+                            label: 'Carbon Saved (kg)',
+                            color: Colors.green,
+                          ),
+                          _buildStatCard(
+                            icon: Icons.star,
+                            value: (scanStats?['badges'] ?? 0).toString(),
+                            label: 'Badges Earned',
+                            color: Colors.amber[600]!,
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 30),
+
+                    // Save/Cancel Buttons (only shown when editing)
+                    if (_isEditing)
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: _updateProfile,
+                              child: Text('Save Changes'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.teal[700],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                padding: EdgeInsets.symmetric(vertical: 15),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () {
+                                setState(() {
+                                  _isEditing = false;
+                                  _nameController.text =
+                                      userData?['name'] ?? '';
+                                  _phoneController.text =
+                                      userData?['phone'] ?? '';
+                                });
+                              },
+                              child: Text('Cancel'),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: Colors.teal[700],
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                padding: EdgeInsets.symmetric(vertical: 15),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _logout,
+                        child: Text(
+                          "Logout",
+                          style: TextStyle(fontSize: 18, color: Colors.white),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.redAccent,
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-
-            const SizedBox(height: 20),
-          ],
-        ),
-      ),
     );
   }
 
-  Widget _buildProfileDetails() {
-    return Column(
-      children: [
-        _buildInfoTile(Icons.phone, "Phone", _phone),
-        _buildInfoTile(Icons.calendar_today, "Joined On", _createdAt),
-        _buildInfoTile(Icons.devices, "Devices Scanned", "$_devicesScanned"),
-        _buildInfoTile(Icons.eco, "Carbon Footprint Saved", "${_carbonFootprintSaved.toStringAsFixed(2)} kg"),
-      ],
-    );
-  }
-
-  Widget _buildEditableFields() {
-    return Column(
-      children: [
-        _buildEditableTextField(Icons.person, "Full Name", _nameController),
-        _buildEditableTextField(Icons.phone, "Phone", _phoneController),
-      ],
-    );
-  }
-
-  Widget _buildInfoTile(IconData icon, String title, String value) {
-    return Card(
-      color: Colors.grey[200], 
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-      child: ListTile(
-        leading: Icon(icon, color: Color(0xFF228B22)), // Olive Green Icons
-        title: Text(title, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
-        subtitle: Text(value, style: TextStyle(color: Colors.grey[700])),
-      ),
-    );
-  }
-
-  Widget _buildEditableTextField(IconData icon, String label, TextEditingController controller) {
-    return Card(
-      color: Colors.grey[200], 
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-      child: ListTile(
-        leading: Icon(icon, color: Color(0xFF228B22)), // Olive Green Icons
-        title: TextField(
-          controller: controller,
-          decoration: InputDecoration(
-            labelText: label,
-            border: InputBorder.none,
-          ),
-          style: TextStyle(color: Colors.black),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStatCard(String title, String value) {
-    return Expanded(
+  Widget _buildStatCard({
+    required IconData icon,
+    required String value,
+    required String label,
+    required Color color,
+  }) {
+    return Container(
+      width: 120,
+      margin: EdgeInsets.symmetric(horizontal: 4),
       child: Card(
-        color: Colors.green[50], 
-        margin: EdgeInsets.symmetric(horizontal: 5),
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(12),
           child: Column(
             children: [
-              Text(value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black)),
-              const SizedBox(height: 5),
-              Text(title, style: TextStyle(fontSize: 14, color: Colors.grey[800])),
+              Icon(icon, size: 30, color: color),
+              SizedBox(height: 8),
+              Text(
+                value,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+              SizedBox(height: 4),
+              Text(
+                label,
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
         ),

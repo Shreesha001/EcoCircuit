@@ -36,7 +36,11 @@ dependencies:
   firebase_vertexai: ^1.4.0
   flutter:
     sdk: flutter
+  flutter_markdown: ^0.7.6+2
+  flutter_signin_button: ^2.0.0
+  flutter_svg: ^2.0.17
   geolocator: ^13.0.3
+  google_fonts: ^6.2.1
   google_maps_flutter: ^2.12.0
   google_maps_webservice2: ^1.0.5
   image_picker: ^1.1.2
