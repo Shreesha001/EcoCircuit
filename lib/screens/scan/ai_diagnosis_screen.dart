@@ -92,7 +92,10 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
         screen = RepairScreen(scanId: widget.scanId);
         break;
       case "Resell":
-        screen = ResellScreen();
+        screen = ResellScreen(
+          scanId: widget.scanId,
+          deviceData: widget.deviceData,
+        );
         break;
       default:
         return;
