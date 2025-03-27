@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'login_screen.dart'; // Ensure this file exists
+import '../auth_screen/login_screen.dart'; // Ensure this file exists
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -13,7 +13,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _signOut() async {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => LoginScreen()), 
+      MaterialPageRoute(builder: (context) => LoginScreen()),
       (Route<dynamic> route) => false, // Clears the navigation stack
     );
   }
@@ -30,8 +30,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: Column(
         children: [
           _buildSettingTile(
-            Icons.dark_mode, 
-            "Dark Mode", 
+            Icons.dark_mode,
+            "Dark Mode",
             Switch(
               value: _darkMode,
               onChanged: (value) {
@@ -42,8 +42,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           _buildSettingTile(
-            Icons.logout, 
-            "Sign Out", 
+            Icons.logout,
+            "Sign Out",
             IconButton(
               icon: Icon(Icons.arrow_forward, color: Colors.red),
               onPressed: _signOut,
@@ -60,7 +60,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       child: ListTile(
         leading: Icon(icon, color: Color(0xFF228B22)), // Forest Green Icon
-        title: Text(title, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+        title: Text(
+          title,
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+        ),
         trailing: action,
       ),
     );

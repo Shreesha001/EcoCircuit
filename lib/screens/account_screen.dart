@@ -1,4 +1,4 @@
-import 'package:eco_circuit/screens/login_screen.dart';
+import 'package:eco_circuit/auth_screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -22,8 +22,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _isEditing = false;
   bool _isLoading = true;
 
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
   @override
   void initState() {
@@ -37,16 +37,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
           context: context,
           builder:
               (context) => AlertDialog(
-                title: Text("Sign Out"),
-                content: Text("Are you sure you want to sign out?"),
+                title: const Text("Sign Out"),
+                content: const Text("Are you sure you want to sign out?"),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(false),
-                    child: Text("Cancel"),
+                    child: const Text("Cancel"),
                   ),
                   TextButton(
                     onPressed: () => Navigator.of(context).pop(true),
-                    child: Text(
+                    child: const Text(
                       "Sign Out",
                       style: TextStyle(color: Colors.red),
                     ),
@@ -60,7 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       try {
         await FirebaseAuth.instance.signOut();
         Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => LoginScreen()),
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
         ); // Adjust the route as needed
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -116,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _isEditing = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Profile updated successfully!'),
           backgroundColor: Colors.green,
         ),
@@ -166,14 +166,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Profile'),
+        title: const Text('My Profile'),
         backgroundColor: Colors.teal[700],
       ),
       body:
           _isLoading
-              ? Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator())
               : SingleChildScrollView(
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
                     // Profile Picture Section
@@ -206,24 +206,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               BoxShadow(
                                 color: Colors.black.withOpacity(0.2),
                                 blurRadius: 6,
-                                offset: Offset(0, 3),
+                                offset: const Offset(0, 3),
                               ),
                             ],
                           ),
                           child: IconButton(
                             iconSize: 20,
-                            icon: Icon(Icons.camera_alt, color: Colors.white),
+                            icon: const Icon(
+                              Icons.camera_alt,
+                              color: Colors.white,
+                            ),
                             onPressed: _uploadProfileImage,
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     // User Info Section
                     Card(
                       child: Padding(
-                        padding: EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
                         child: Column(
                           children: [
                             ListTile(
@@ -250,11 +253,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             child: Text(
                                               userData?['name'] ??
                                                   'No name provided',
-                                              style: TextStyle(fontSize: 18),
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                              ),
                                             ),
                                           ),
                                           IconButton(
-                                            icon: Icon(Icons.edit, size: 20),
+                                            icon: const Icon(
+                                              Icons.edit,
+                                              size: 20,
+                                            ),
                                             onPressed: () {
                                               setState(() {
                                                 _isEditing = true;
@@ -264,7 +272,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ],
                                       ),
                             ),
-                            Divider(),
+                            const Divider(),
                             ListTile(
                               leading: Icon(
                                 Icons.email,
@@ -272,7 +280,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ),
                               title: Text(user?.email ?? 'No email'),
                             ),
-                            Divider(),
+                            const Divider(),
                             ListTile(
                               leading: Icon(
                                 Icons.phone,
@@ -298,11 +306,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             child: Text(
                                               userData?['phone'] ??
                                                   'No phone number',
-                                              style: TextStyle(fontSize: 18),
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                              ),
                                             ),
                                           ),
                                           IconButton(
-                                            icon: Icon(Icons.edit, size: 20),
+                                            icon: const Icon(
+                                              Icons.edit,
+                                              size: 20,
+                                            ),
                                             onPressed: () {
                                               setState(() {
                                                 _isEditing = true;
@@ -316,7 +329,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
@@ -343,7 +356,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
 
                     // Save/Cancel Buttons (only shown when editing)
                     if (_isEditing)
@@ -352,17 +365,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Expanded(
                             child: ElevatedButton(
                               onPressed: _updateProfile,
-                              child: Text('Save Changes'),
+
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.teal[700],
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                padding: EdgeInsets.symmetric(vertical: 15),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 15,
+                                ),
                               ),
+                              child: const Text('Save Changes'),
                             ),
                           ),
-                          SizedBox(width: 10),
+                          const SizedBox(width: 10),
                           Expanded(
                             child: OutlinedButton(
                               onPressed: () {
@@ -374,14 +390,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       userData?['phone'] ?? '';
                                 });
                               },
-                              child: Text('Cancel'),
+
                               style: OutlinedButton.styleFrom(
                                 foregroundColor: Colors.teal[700],
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                padding: EdgeInsets.symmetric(vertical: 15),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 15,
+                                ),
                               ),
+                              child: const Text('Cancel'),
                             ),
                           ),
                         ],
@@ -390,13 +409,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: _logout,
-                        child: Text(
-                          "Logout",
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
+
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.redAccent,
-                          padding: EdgeInsets.symmetric(vertical: 15),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                        ),
+                        child: const Text(
+                          "Logout",
+                          style: TextStyle(fontSize: 18, color: Colors.white),
                         ),
                       ),
                     ),
@@ -414,24 +434,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }) {
     return Container(
       width: 120,
-      margin: EdgeInsets.symmetric(horizontal: 4),
+      margin: const EdgeInsets.symmetric(horizontal: 4),
       child: Card(
         child: Padding(
-          padding: EdgeInsets.all(12),
+          padding: const EdgeInsets.all(12),
           child: Column(
             children: [
               Icon(icon, size: 30, color: color),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
                 value,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
                 label,
-                style: TextStyle(fontSize: 12, color: Colors.grey),
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
                 textAlign: TextAlign.center,
               ),
             ],

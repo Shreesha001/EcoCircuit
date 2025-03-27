@@ -1,6 +1,6 @@
 import 'package:eco_circuit/responsive/mobilescreen_layout.dart';
 import 'package:eco_circuit/screens/home_screen.dart';
-import 'package:eco_circuit/screens/signup_screen.dart';
+import 'package:eco_circuit/auth_screen/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -69,10 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
       String errorMsg = "Invalid email or password";
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(errorMsg),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(errorMsg), backgroundColor: Colors.red),
       );
     } finally {
       setState(() {
@@ -82,9 +79,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void navigateToSignUp() {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => SignUpScreen()),
-    );
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (context) => SignUpScreen()));
   }
 
   @override
@@ -162,16 +159,19 @@ class _LoginScreenState extends State<LoginScreen> {
                         side: const BorderSide(color: Colors.black),
                       ),
                     ),
-                    child: _isLoading
-                        ? const CircularProgressIndicator(color: Colors.black)
-                        : const Text(
-                            "Login",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                    child:
+                        _isLoading
+                            ? const CircularProgressIndicator(
                               color: Colors.black,
+                            )
+                            : const Text(
+                              "Login",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
                             ),
-                          ),
                   ),
                   const SizedBox(height: 15),
                   Row(

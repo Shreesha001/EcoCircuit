@@ -1,4 +1,4 @@
-import 'package:eco_circuit/screens/login_screen.dart';
+import 'package:eco_circuit/auth_screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -38,8 +38,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   bool _isValidPassword(String password) {
-    final passwordRegex =
-        RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+    final passwordRegex = RegExp(
+      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
+    );
     return passwordRegex.hasMatch(password);
   }
 
@@ -57,9 +58,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _validatePassword(String value) {
     setState(() {
-      _passwordError = _isValidPassword(value)
-          ? null
-          : 'Password must have 8+ characters, including uppercase, lowercase, number & special character';
+      _passwordError =
+          _isValidPassword(value)
+              ? null
+              : 'Password must have 8+ characters, including uppercase, lowercase, number & special character';
     });
   }
 
@@ -98,7 +100,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             'created_at': Timestamp.now(),
             "devices_scanned": 0,
             "carbon_saved": 0,
-            "badges_earned": 0
+            "badges_earned": 0,
           });
 
           _showSnackbar("Account created successfully");
