@@ -1,4 +1,5 @@
 import 'package:eco_circuit/auth_screen/login_screen.dart';
+import 'package:eco_circuit/widgets/Account_screen_widgets/build_stat_card.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -335,19 +336,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          _buildStatCard(
+                          buildStatCard(
                             icon: Icons.devices,
                             value: scanStats?['totalScans']?.toString() ?? '0',
                             label: 'Devices Scanned',
                             color: Colors.teal[700]!,
                           ),
-                          _buildStatCard(
+                          buildStatCard(
                             icon: Icons.eco,
                             value: scanStats?['carbonSaved']?.toString() ?? '0',
                             label: 'Carbon Saved (kg)',
                             color: Colors.green,
                           ),
-                          _buildStatCard(
+                          buildStatCard(
                             icon: Icons.star,
                             value: (scanStats?['badges'] ?? 0).toString(),
                             label: 'Badges Earned',
@@ -423,44 +424,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
               ),
-    );
-  }
-
-  Widget _buildStatCard({
-    required IconData icon,
-    required String value,
-    required String label,
-    required Color color,
-  }) {
-    return Container(
-      width: 120,
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            children: [
-              Icon(icon, size: 30, color: color),
-              const SizedBox(height: 8),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                label,
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
