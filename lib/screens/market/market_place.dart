@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'purchase_screen.dart'; // Add this import
+import 'purchase_screen.dart';
 
 class MarketplaceScreen extends StatefulWidget {
   const MarketplaceScreen({super.key});
@@ -92,27 +92,69 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 3,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Product Image
             Container(
-              height: 200,
+              height: 180,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 color: Colors.grey[200],
               ),
-              child: _buildImage(scanData?['imageUrl']),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child:
+                    scanData?['imageUrl'] != null
+                        ? Image.network(
+                          scanData!['imageUrl'],
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(
+                                value:
+                                    loadingProgress.expectedTotalBytes != null
+                                        ? loadingProgress
+                                                .cumulativeBytesLoaded /
+                                            loadingProgress.expectedTotalBytes!
+                                        : null,
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Center(
+                              child: Icon(
+                                Icons.broken_image,
+                                size: 48,
+                                color: Colors.grey,
+                              ),
+                            );
+                          },
+                        )
+                        : const Center(
+                          child: Icon(
+                            Icons.phone_android,
+                            size: 48,
+                            color: Colors.grey,
+                          ),
+                        ),
+              ),
             ),
             const SizedBox(height: 12),
 
+            // Device Name
             Text(
               '${listingData['deviceBrand']} ${listingData['deviceModel']}',
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
 
+            // Condition and Price
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -132,13 +174,15 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
             ),
             const SizedBox(height: 8),
 
+            // Description
             if (listingData['description'] != null)
               Text(
                 listingData['description'],
                 style: TextStyle(color: Colors.grey[600]),
               ),
-
             const SizedBox(height: 16),
+
+            // Contact Seller Button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -146,6 +190,10 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                     () => _handlePurchase(context, listingData, listingId),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.teal[700],
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
                 ),
                 child: const Text(
                   'Contact Seller',
@@ -155,39 +203,6 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildImage(String? imageUrl) {
-    if (imageUrl == null || imageUrl.isEmpty) {
-      return const Center(
-        child: Icon(Icons.photo_camera, size: 48, color: Colors.grey),
-      );
-    }
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8),
-      child: Image.network(
-        imageUrl,
-        fit: BoxFit.cover,
-        width: double.infinity,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Center(
-            child: CircularProgressIndicator(
-              value:
-                  loadingProgress.expectedTotalBytes != null
-                      ? loadingProgress.cumulativeBytesLoaded /
-                          loadingProgress.expectedTotalBytes!
-                      : null,
-            ),
-          );
-        },
-        errorBuilder:
-            (context, error, stackTrace) => const Center(
-              child: Icon(Icons.broken_image, size: 48, color: Colors.grey),
-            ),
       ),
     );
   }

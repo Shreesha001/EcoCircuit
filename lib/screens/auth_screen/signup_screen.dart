@@ -1,4 +1,4 @@
-import 'package:eco_circuit/auth_screen/login_screen.dart';
+import 'package:eco_circuit/screens/auth_screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
