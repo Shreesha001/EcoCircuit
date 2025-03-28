@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../auth_screen/login_screen.dart'; // Ensure this file exists
+import 'auth_screen/login_screen.dart'; // Ensure this file exists
 
 class SettingsScreen extends StatefulWidget {
   @override

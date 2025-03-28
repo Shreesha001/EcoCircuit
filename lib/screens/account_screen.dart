@@ -1,4 +1,6 @@
-import 'package:eco_circuit/auth_screen/login_screen.dart';
+import 'package:eco_circuit/screens/auth_screen/login_screen.dart';
+import 'package:eco_circuit/screens/purchase_details_screen.dart';
+import 'package:eco_circuit/screens/seller_notification_screen.dart';
 import 'package:eco_circuit/widgets/Account_screen_widgets/build_stat_card.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,6 +8,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
+
+import 'package:intl/intl.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -94,10 +98,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
               .doc(user!.uid)
               .collection('scans')
               .get();
+
+      // Load purchase requests count
+      var purchases =
+          await _firestore
+              .collection('purchases')
+              .where('sellerId', isEqualTo: user!.uid)
+              .get();
+
       setState(() {
         scanStats = {
           'totalScans': scans.docs.length,
-          'badges': scans.docs.length ~/ 5, // 1 badge per 5 scans
+          'badges': scans.docs.length ~/ 5,
+          'purchaseRequests': purchases.docs.length, // Add purchase count
         };
         _isLoading = false;
       });
@@ -376,7 +389,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   vertical: 15,
                                 ),
                               ),
-                              child: const Text('Save Changes'),
+                              child: const Text(
+                                'Save Changes',
+                                style: TextStyle(color: Colors.white),
+                              ),
                             ),
                           ),
                           const SizedBox(width: 10),
@@ -406,6 +422,141 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ],
                       ),
+
+                    const SizedBox(height: 24),
+                    const Text(
+                      'Purchase Requests',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Divider(),
+                    StreamBuilder<QuerySnapshot>(
+                      stream:
+                          FirebaseFirestore.instance
+                              .collection('purchases')
+                              .where('sellerId', isEqualTo: user?.uid ?? '')
+                              .orderBy('createdAt', descending: true)
+                              .limit(3)
+                              .snapshots(),
+                      builder: (context, snapshot) {
+                        // Error states
+                        if (snapshot.hasError) {
+                          return ListTile(
+                            leading: const Icon(
+                              Icons.warning,
+                              color: Colors.orange,
+                            ),
+                            title: const Text('Could not load requests'),
+                            subtitle: Text(
+                              'Tap to retry\nError: ${snapshot.error.toString()}',
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                            onTap: () => setState(() {}), // Simple retry
+                          );
+                        }
+
+                        // Loading state
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+
+                        // Empty state
+                        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                          return const ListTile(
+                            leading: Icon(Icons.notifications_none),
+                            title: Text('No purchase requests'),
+                            subtitle: Text(
+                              'When buyers contact you, requests will appear here',
+                            ),
+                          );
+                        }
+
+                        // Success state
+                        return Column(
+                          children: [
+                            ...snapshot.data!.docs.map((doc) {
+                              final data =
+                                  doc.data() as Map<String, dynamic>? ?? {};
+                              return ListTile(
+                                leading: const Icon(Icons.notifications_active),
+                                title: Text(
+                                  data['buyerName'] ?? 'Unknown buyer',
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      data['deviceModel'] ?? 'Unknown device',
+                                    ),
+                                    if (data['createdAt'] != null)
+                                      Text(
+                                        DateFormat.yMMMd().format(
+                                          (data['createdAt'] as Timestamp)
+                                              .toDate(),
+                                        ),
+                                        style: TextStyle(
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                                trailing: Chip(
+                                  label: Text(
+                                    (data['status'] ?? 'pending').toUpperCase(),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: _getStatusColor(data['status']),
+                                    ),
+                                  ),
+                                  backgroundColor: _getStatusColor(
+                                    data['status'],
+                                  ).withOpacity(0.2),
+                                ),
+                                onTap:
+                                    () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) => PurchaseDetailsScreen(
+                                              purchaseData: data,
+                                              purchaseId: doc.id,
+                                            ),
+                                      ),
+                                    ),
+                              );
+                            }).toList(),
+
+                            // View All button
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              child: OutlinedButton.icon(
+                                icon: const Icon(Icons.list),
+                                label: const Text('VIEW ALL REQUESTS'),
+                                onPressed:
+                                    () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) =>
+                                                const SellerNotificationsScreen(),
+                                      ),
+                                    ),
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                          ],
+                        );
+                      },
+                    ),
+                    const Divider(),
+                    SizedBox(height: 10),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
@@ -425,5 +576,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
     );
+  }
+
+  Color _getStatusColor(String? status) {
+    switch (status?.toLowerCase()) {
+      case 'accepted':
+        return Colors.green;
+      case 'rejected':
+        return Colors.red;
+      case 'completed':
+        return Colors.blue;
+      default:
+        return Colors.orange;
+    }
   }
 }

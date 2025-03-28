@@ -1,6 +1,6 @@
 import 'package:eco_circuit/responsive/mobilescreen_layout.dart';
 import 'package:eco_circuit/screens/home_screen.dart';
-import 'package:eco_circuit/auth_screen/signup_screen.dart';
+import 'package:eco_circuit/screens/auth_screen/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
