@@ -12,6 +12,8 @@ import 'dart:io';
 import 'package:intl/intl.dart';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -529,7 +531,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                     ),
                               );
-                            }).toList(),
+                            }),
 
                             // View All button
                             Padding(

@@ -4,7 +4,7 @@ import 'package:eco_circuit/widgets/home_screen_widgets/blog/blog_model.dart';
 class BlogDetailScreen extends StatelessWidget {
   final Blog blog;
 
-  const BlogDetailScreen({Key? key, required this.blog}) : super(key: key);
+  const BlogDetailScreen({super.key, required this.blog});
 
   @override
   Widget build(BuildContext context) {

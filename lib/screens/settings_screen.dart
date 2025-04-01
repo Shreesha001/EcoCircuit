@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'auth_screen/login_screen.dart'; // Ensure this file exists
 
 class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({super.key});
+
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }
@@ -13,7 +15,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _signOut() async {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => LoginScreen()),
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
       (Route<dynamic> route) => false, // Clears the navigation stack
     );
   }
@@ -23,9 +25,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       backgroundColor: Colors.white, // Light theme background
       appBar: AppBar(
-        title: Text("Settings", style: TextStyle(color: Colors.black)),
+        title: const Text("Settings", style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.green[100], // Light Green AppBar
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: Column(
         children: [
@@ -45,7 +47,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Icons.logout,
             "Sign Out",
             IconButton(
-              icon: Icon(Icons.arrow_forward, color: Colors.red),
+              icon: const Icon(Icons.arrow_forward, color: Colors.red),
               onPressed: _signOut,
             ),
           ),
@@ -57,12 +59,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget _buildSettingTile(IconData icon, String title, Widget action) {
     return Card(
       color: Colors.grey[200], // Light theme card
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       child: ListTile(
-        leading: Icon(icon, color: Color(0xFF228B22)), // Forest Green Icon
+        leading: Icon(icon, color: const Color(0xFF228B22)), // Forest Green Icon
         title: Text(
           title,
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
         trailing: action,
       ),

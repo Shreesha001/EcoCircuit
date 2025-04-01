@@ -1,9 +1,5 @@
-import 'dart:math';
 
 import 'package:eco_circuit/firebase_options.dart';
-import 'package:eco_circuit/screens/account_screen.dart';
-import 'package:eco_circuit/screens/history/history_screen.dart';
-import 'package:eco_circuit/screens/home_screen.dart';
 import 'package:eco_circuit/screens/auth_screen/login_screen.dart';
 import 'package:eco_circuit/screens/market/market_place.dart';
 import 'package:eco_circuit/screens/market/seller_notification_screen.dart';
@@ -37,7 +33,7 @@ class MyApp extends StatelessWidget {
           seedColor: const Color.fromRGBO(56, 118, 29, 255),
         ),
       ),
-      home: LoginScreen(),
+      home: const LoginScreen(),
     );
   }
 }

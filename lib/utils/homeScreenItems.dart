@@ -7,8 +7,8 @@ import 'package:eco_circuit/screens/market/market_place.dart';
 import 'package:flutter/material.dart';
 
 final List<Widget> HomeScreenItems = [
-  HomeScreen(),
-  MarketplaceScreen(),
-  HistoryScreen(),
-  ProfileScreen(),
+  const HomeScreen(),
+  const MarketplaceScreen(),
+  const HistoryScreen(),
+  const ProfileScreen(),
 ];

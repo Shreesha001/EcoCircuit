@@ -22,7 +22,7 @@ class _ResellScreenState extends State<ResellScreen> {
   final _priceController = TextEditingController();
   final _descriptionController = TextEditingController();
   String _condition = 'Good';
-  List<String> _imageUrls = [];
+  final List<String> _imageUrls = [];
   bool _isLoading = false;
 
   @override
@@ -227,13 +227,13 @@ class _ResellScreenState extends State<ResellScreen> {
                       ],
                     ),
                   ),
-                  DropdownMenuItem(
+                  const DropdownMenuItem(
                     value: 'Poor',
                     child: Row(
                       children: [
-                        const Icon(Icons.star_border, color: Colors.grey),
-                        const SizedBox(width: 8),
-                        const Text('Poor'),
+                        Icon(Icons.star_border, color: Colors.grey),
+                        SizedBox(width: 8),
+                        Text('Poor'),
                       ],
                     ),
                   ),
