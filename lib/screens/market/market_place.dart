@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eco_circuit/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'purchase_screen.dart';
@@ -21,8 +22,11 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Device Marketplace'),
-        backgroundColor: Colors.teal[700],
+        title: const Text(
+          'Device Marketplace',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Pallete.appBarColor,
       ),
       body: _buildMarketplaceList(),
     );
@@ -188,7 +192,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                 onPressed:
                     () => _handlePurchase(context, listingData, listingId),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.teal[700],
+                  backgroundColor: Pallete.buttonColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),

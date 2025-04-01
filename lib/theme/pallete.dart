@@ -12,4 +12,15 @@ class Pallete {
   // Accent Colors
   static const Color turquoise = Color(0xFF7FFBE2); // Freshness & cleanliness
   static const Color darkSlate = Color(0xFF424444); // Contrast & readability
+
+  static const Color appBarColor = forestGreen; // AppBar background
+  static const Color buttonColor = oliveGreen; // Primary Button color
+  static const Color buttonTextColor = Colors.white; // Button text color
+  static const Color bottomNavColor =
+      darkSlate; // Bottom navigation bar background
+  static const Color bottomNavActiveColor =
+      turquoise; // Active item in bottom nav
+  static const Color bottomNavInactiveColor =
+      lightGray; // Inactive items in bottom nav
+  static const Color iconColor = darkSlate;
 }

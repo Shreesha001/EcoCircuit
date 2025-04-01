@@ -1,6 +1,6 @@
 import 'package:eco_circuit/screens/auth_screen/login_screen.dart';
-import 'package:eco_circuit/screens/market/purchase_details_screen.dart';
 import 'package:eco_circuit/screens/market/seller_notification_screen.dart';
+import 'package:eco_circuit/theme/pallete.dart';
 import 'package:eco_circuit/widgets/Account_screen_widgets/build_stat_card.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,8 +8,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
-
-import 'package:intl/intl.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -182,8 +180,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Profile'),
-        backgroundColor: Colors.teal[700],
+        title: const Text('My Profile', style: TextStyle(color: Colors.white)),
+        backgroundColor: Pallete.appBarColor,
       ),
       body:
           _isLoading
@@ -216,7 +214,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           width: 36,
                           height: 36,
                           decoration: BoxDecoration(
-                            color: Colors.teal[700],
+                            color: const Color.fromARGB(255, 196, 188, 188),
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
@@ -276,6 +274,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                           IconButton(
                                             icon: const Icon(
+                                              color: Pallete.iconColor,
                                               Icons.edit,
                                               size: 20,
                                             ),
@@ -329,6 +328,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                           IconButton(
                                             icon: const Icon(
+                                              color: Pallete.iconColor,
                                               Icons.edit,
                                               size: 20,
                                             ),
@@ -355,7 +355,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             icon: Icons.devices,
                             value: scanStats?['totalScans']?.toString() ?? '0',
                             label: 'Devices Scanned',
-                            color: Colors.teal[700]!,
+                            color: Pallete.iconColor,
                           ),
                           buildStatCard(
                             icon: Icons.eco,
@@ -384,7 +384,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: ElevatedButton(
                                 onPressed: _updateProfile,
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.teal[700],
+                                  backgroundColor: Pallete.buttonColor,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                   ),

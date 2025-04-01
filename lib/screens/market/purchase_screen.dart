@@ -1,3 +1,4 @@
+import 'package:eco_circuit/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
@@ -56,8 +57,11 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Complete Purchase'),
-        backgroundColor: Colors.teal[700],
+        title: const Text(
+          'Complete Purchase',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Pallete.appBarColor,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -165,7 +169,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                     child: ElevatedButton(
                       onPressed: _isLoading ? null : _submitPurchase,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.teal[700],
+                        backgroundColor: Pallete.buttonColor,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),

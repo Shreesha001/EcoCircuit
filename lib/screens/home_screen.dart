@@ -210,7 +210,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 84, 161, 51),
+                        backgroundColor: Pallete.buttonColor,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -255,10 +255,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const AddBlogScreen()),
+                      MaterialPageRoute(
+                        builder: (context) => const AddBlogScreen(),
+                      ),
                     );
                   },
-                  backgroundColor: const Color(0xFF5EA160),
+                  backgroundColor: Pallete.buttonColor,
                   icon: const Icon(Icons.edit, color: Colors.white),
                   label: const Text(
                     "Write a Blog",

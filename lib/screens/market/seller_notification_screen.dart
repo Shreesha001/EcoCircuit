@@ -1,4 +1,5 @@
 import 'package:eco_circuit/screens/market/purchase_details_screen.dart';
+import 'package:eco_circuit/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,7 +14,11 @@ class SellerNotificationsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Purchase Requests'),
+        backgroundColor: Pallete.appBarColor,
+        title: const Text(
+          'Purchase Requests',
+          style: TextStyle(color: Colors.white),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -21,6 +26,7 @@ class SellerNotificationsScreen extends StatelessWidget {
           ),
         ],
       ),
+
       body: StreamBuilder<QuerySnapshot>(
         stream:
             FirebaseFirestore.instance

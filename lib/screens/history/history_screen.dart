@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eco_circuit/theme/pallete.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -11,7 +12,13 @@ class HistoryScreen extends StatelessWidget {
     final String userId = FirebaseAuth.instance.currentUser!.uid;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Scan History")),
+      appBar: AppBar(
+        title: const Text(
+          "Scan History",
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Pallete.appBarColor,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: StreamBuilder<QuerySnapshot>(
