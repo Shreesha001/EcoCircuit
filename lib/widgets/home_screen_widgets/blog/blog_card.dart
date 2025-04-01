@@ -5,7 +5,7 @@ import 'package:eco_circuit/widgets/home_screen_widgets/blog/blog_detail_screen.
 class BlogCard extends StatelessWidget {
   final Blog blog;
 
-  const BlogCard({Key? key, required this.blog}) : super(key: key);
+  const BlogCard({super.key, required this.blog});
 
   @override
   Widget build(BuildContext context) {

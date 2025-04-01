@@ -1,6 +1,6 @@
 import 'package:eco_circuit/screens/auth_screen/login_screen.dart';
-import 'package:eco_circuit/screens/purchase_details_screen.dart';
-import 'package:eco_circuit/screens/seller_notification_screen.dart';
+import 'package:eco_circuit/screens/market/purchase_details_screen.dart';
+import 'package:eco_circuit/screens/market/seller_notification_screen.dart';
 import 'package:eco_circuit/widgets/Account_screen_widgets/build_stat_card.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +12,8 @@ import 'dart:io';
 import 'package:intl/intl.dart';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -529,7 +531,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ),
                                     ),
                               );
-                            }).toList(),
+                            }),
 
                             // View All button
                             Padding(
@@ -556,7 +558,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       },
                     ),
                     const Divider(),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(

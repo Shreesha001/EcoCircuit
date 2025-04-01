@@ -4,6 +4,8 @@ import 'package:eco_circuit/widgets/home_screen_widgets/blog/blog_model.dart';
 import 'package:flutter/material.dart';
 
 class BlogListWidget extends StatelessWidget {
+  const BlogListWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -12,10 +14,10 @@ class BlogListWidget extends StatelessWidget {
         stream: FirebaseFirestore.instance.collection('blogs').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(child: Text("No blogs available"));
+            return const Center(child: Text("No blogs available"));
           }
 
           List<Blog> blogs =

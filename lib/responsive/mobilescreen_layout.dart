@@ -3,13 +3,15 @@ import 'package:eco_circuit/utils/homeScreenItems.dart';
 import 'package:eco_circuit/theme/pallete.dart';
 
 class MobileScreenLayout extends StatefulWidget {
+  const MobileScreenLayout({super.key});
+
   @override
   _MobileScreenLayoutState createState() => _MobileScreenLayoutState();
 }
 
 class _MobileScreenLayoutState extends State<MobileScreenLayout> {
   int _selectedIndex = 0;
-  PageController _pageController = PageController();
+  final PageController _pageController = PageController();
 
   @override
   void dispose() {
@@ -29,7 +31,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
     return Scaffold(
       body: PageView(
         controller: _pageController,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         children: HomeScreenItems,
       ),
       bottomNavigationBar: BottomNavigationBar(

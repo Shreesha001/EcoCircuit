@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class AddBlogScreen extends StatefulWidget {
+  const AddBlogScreen({super.key});
+
   @override
   _AddBlogScreenState createState() => _AddBlogScreenState();
 }
