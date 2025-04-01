@@ -1,6 +1,10 @@
 
 import 'package:eco_circuit/firebase_options.dart';
 import 'package:eco_circuit/screens/auth_screen/login_screen.dart';
+import 'package:eco_circuit/screens/market/market_place.dart';
+import 'package:eco_circuit/screens/market/seller_notification_screen.dart';
+import 'package:eco_circuit/screens/services/recycle_screen.dart';
+import 'package:eco_circuit/screens/auth_screen/signup_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_vertexai/firebase_vertexai.dart';
 import 'package:flutter/material.dart';

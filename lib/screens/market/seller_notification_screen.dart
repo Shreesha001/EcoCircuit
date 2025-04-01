@@ -1,4 +1,3 @@
-
 import 'package:eco_circuit/screens/market/purchase_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
