@@ -241,8 +241,8 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 10),
 
             // **Blog List**
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
               child: BlogListWidget(),
             ),
 
@@ -255,7 +255,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => AddBlogScreen()),
+                      MaterialPageRoute(builder: (context) => const AddBlogScreen()),
                     );
                   },
                   backgroundColor: const Color(0xFF5EA160),

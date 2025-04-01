@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
         );
 
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => MobileScreenLayout()),
+          MaterialPageRoute(builder: (context) => const MobileScreenLayout()),
         );
       } else {
         setState(() {
@@ -80,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void navigateToSignUp() {
     Navigator.of(
       context,
-    ).push(MaterialPageRoute(builder: (context) => SignUpScreen()));
+    ).push(MaterialPageRoute(builder: (context) => const SignUpScreen()));
   }
 
   @override

@@ -10,5 +10,5 @@ final List<Widget> HomeScreenItems = [
   const HomeScreen(),
   const MarketplaceScreen(),
   const HistoryScreen(),
-  ProfileScreen(),
+  const ProfileScreen(),
 ];
