@@ -366,212 +366,150 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           buildStatCard(
                             icon: Icons.star,
                             value: (scanStats?['badges'] ?? 0).toString(),
-                            label: 'Badges Earned',
+                            label: 'Badges \n Earned',
                             color: Colors.amber[600]!,
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    // const SizedBox(height: 10),
 
                     // Save/Cancel Buttons (only shown when editing)
                     if (_isEditing)
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: _updateProfile,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: _updateProfile,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.teal[700],
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Save Changes',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _isEditing = false;
+                                    _nameController.text =
+                                        userData?['name'] ?? '';
+                                    _phoneController.text =
+                                        userData?['phone'] ?? '';
+                                  });
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.teal[700],
+                                  side: BorderSide(color: Colors.teal[700]!),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
 
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 24),
+                          SizedBox(
+                            width: double.infinity,
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) =>
+                                            const SellerNotificationsScreen(),
+                                  ),
+                                );
+                              },
+                              borderRadius: BorderRadius.circular(10),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 6,
+                                      offset: const Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: const Center(
+                                  child: Text(
+                                    'View Purchase Requests',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 16),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: _logout,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.teal[700],
+                                backgroundColor: Colors.redAccent[700],
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 15,
                                 ),
                               ),
                               child: const Text(
-                                'Save Changes',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed: () {
-                                setState(() {
-                                  _isEditing = false;
-                                  _nameController.text =
-                                      userData?['name'] ?? '';
-                                  _phoneController.text =
-                                      userData?['phone'] ?? '';
-                                });
-                              },
-
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.teal[700],
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 15,
+                                "Logout",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
                                 ),
                               ),
-                              child: const Text('Cancel'),
                             ),
                           ),
                         ],
-                      ),
-
-                    const SizedBox(height: 24),
-                    const Text(
-                      'Purchase Requests',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Divider(),
-                    StreamBuilder<QuerySnapshot>(
-                      stream:
-                          FirebaseFirestore.instance
-                              .collection('purchases')
-                              .where('sellerId', isEqualTo: user?.uid ?? '')
-                              .orderBy('createdAt', descending: true)
-                              .limit(3)
-                              .snapshots(),
-                      builder: (context, snapshot) {
-                        // Error states
-                        if (snapshot.hasError) {
-                          return ListTile(
-                            leading: const Icon(
-                              Icons.warning,
-                              color: Colors.orange,
-                            ),
-                            title: const Text('Could not load requests'),
-                            subtitle: Text(
-                              'Tap to retry\nError: ${snapshot.error.toString()}',
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                            onTap: () => setState(() {}), // Simple retry
-                          );
-                        }
-
-                        // Loading state
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-
-                        // Empty state
-                        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                          return const ListTile(
-                            leading: Icon(Icons.notifications_none),
-                            title: Text('No purchase requests'),
-                            subtitle: Text(
-                              'When buyers contact you, requests will appear here',
-                            ),
-                          );
-                        }
-
-                        // Success state
-                        return Column(
-                          children: [
-                            ...snapshot.data!.docs.map((doc) {
-                              final data =
-                                  doc.data() as Map<String, dynamic>? ?? {};
-                              return ListTile(
-                                leading: const Icon(Icons.notifications_active),
-                                title: Text(
-                                  data['buyerName'] ?? 'Unknown buyer',
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      data['deviceModel'] ?? 'Unknown device',
-                                    ),
-                                    if (data['createdAt'] != null)
-                                      Text(
-                                        DateFormat.yMMMd().format(
-                                          (data['createdAt'] as Timestamp)
-                                              .toDate(),
-                                        ),
-                                        style: TextStyle(
-                                          color: Colors.grey[600],
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                                trailing: Chip(
-                                  label: Text(
-                                    (data['status'] ?? 'pending').toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: _getStatusColor(data['status']),
-                                    ),
-                                  ),
-                                  backgroundColor: _getStatusColor(
-                                    data['status'],
-                                  ).withOpacity(0.2),
-                                ),
-                                onTap:
-                                    () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder:
-                                            (context) => PurchaseDetailsScreen(
-                                              purchaseData: data,
-                                              purchaseId: doc.id,
-                                            ),
-                                      ),
-                                    ),
-                              );
-                            }),
-
-                            // View All button
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                              ),
-                              child: OutlinedButton.icon(
-                                icon: const Icon(Icons.list),
-                                label: const Text('VIEW ALL REQUESTS'),
-                                onPressed:
-                                    () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder:
-                                            (context) =>
-                                                const SellerNotificationsScreen(),
-                                      ),
-                                    ),
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                          ],
-                        );
-                      },
-                    ),
-                    const Divider(),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _logout,
-
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.redAccent,
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                        ),
-                        child: const Text(
-                          "Logout",
-                          style: TextStyle(fontSize: 18, color: Colors.white),
-                        ),
                       ),
                     ),
                   ],
