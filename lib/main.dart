@@ -6,7 +6,7 @@ import 'package:eco_circuit/screens/history/history_screen.dart';
 import 'package:eco_circuit/screens/home_screen.dart';
 import 'package:eco_circuit/screens/auth_screen/login_screen.dart';
 import 'package:eco_circuit/screens/market/market_place.dart';
-import 'package:eco_circuit/screens/seller_notification_screen.dart';
+import 'package:eco_circuit/screens/market/seller_notification_screen.dart';
 import 'package:eco_circuit/screens/services/recycle_screen.dart';
 import 'package:eco_circuit/screens/auth_screen/signup_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
