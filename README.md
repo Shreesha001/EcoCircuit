@@ -20,7 +20,7 @@
 
 > _(Insert your architecture diagram below once uploaded to GitHub or image hosting)_  
 
-![Architecture Diagram](assets/architecture-diagram.png)
+![Architecture Diagram](image2.jpg)
 
 ---
 
@@ -28,7 +28,7 @@
 
 > _(Insert your user flow or process diagram below once uploaded)_  
 
-![User Flow Diagram](assets/user-flow-diagram.png)
+![User Flow Diagram](image1.jpg)
 
 ---
 
