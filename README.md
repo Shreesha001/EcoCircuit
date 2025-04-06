@@ -18,13 +18,13 @@
 
 ## 🧠 Architecture Diagram
 
-<img src="image2.jpg" alt="Architecture Diagram" width="600"/>
+<img src="image2.jpg" alt="Architecture Diagram" width="400"/>
 
 ---
 
 ## 🔁 User Flow Diagram
 
-<img src="image1.jpg" alt="User Flow Diagram" width="600"/>
+<img src="image1.jpg" alt="User Flow Diagram" width="400"/>
 
 
 ---
