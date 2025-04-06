@@ -18,15 +18,11 @@
 
 ## 🧠 Architecture Diagram
 
-> _(Insert your architecture diagram below once uploaded to GitHub or image hosting)_  
-
 <img src="image2.jpg" alt="Architecture Diagram" width="600"/>
 
 ---
 
 ## 🔁 User Flow Diagram
-
-> _(Insert your user flow or process diagram below once uploaded)_  
 
 <img src="image1.jpg" alt="User Flow Diagram" width="600"/>
 
