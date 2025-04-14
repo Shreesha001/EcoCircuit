@@ -247,31 +247,31 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             // **Write Blog Button**
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: FloatingActionButton.extended(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AddBlogScreen(),
-                      ),
-                    );
-                  },
-                  backgroundColor: Pallete.buttonColor,
-                  icon: const Icon(Icons.edit, color: Colors.white),
-                  label: const Text(
-                    "Write a Blog",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            //   child: Align(
+            //     alignment: Alignment.centerRight,
+            //     child: FloatingActionButton.extended(
+            //       onPressed: () {
+            //         Navigator.push(
+            //           context,
+            //           MaterialPageRoute(
+            //             builder: (context) => const AddBlogScreen(),
+            //           ),
+            //         );
+            //       },
+            //       backgroundColor: Pallete.buttonColor,
+            //       icon: const Icon(Icons.edit, color: Colors.white),
+            //       label: const Text(
+            //         "Write a Blog",
+            //         style: TextStyle(
+            //           color: Colors.white,
+            //           fontWeight: FontWeight.bold,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             const SizedBox(height: 20),
           ],
         ),
